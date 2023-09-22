@@ -18,9 +18,5 @@ public class AI_Movement : MonoBehaviour
     void Seek()
     {
         agent.destination = target.transform.position;
-        if ()
-        {
-
-        }
     }
 }
