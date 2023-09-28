@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class FlockingAgent : MonoBehaviour
+public class Flocking : MonoBehaviour
 {
     public float speed = 5.0f;
     public float rotationSpeed = 2.0f;
@@ -14,10 +14,22 @@ public class FlockingAgent : MonoBehaviour
 
         Collider[] neighbors = Physics.OverlapSphere(transform.position, neighborRadius);
 
+        // Calculate neighbor center of mass
+        foreach (var neighbor in neighbors)
+        {
+            Vector3 centerOfMass;
+
+            if (neighbor.gameObject.CompareTag("gaviota"))
+            {
+                //center of mass
+            }
+        }
+
         foreach (var neighbor in neighbors)
         {
             if (neighbor.gameObject != gameObject)
             {
+                // Calculate neighbor center of mass
                 Vector3 toNeighbor = neighbor.transform.position - transform.position;
 
                 // Alignment
