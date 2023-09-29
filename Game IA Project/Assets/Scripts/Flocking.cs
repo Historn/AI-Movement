@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Flocking : MonoBehaviour
@@ -6,6 +8,26 @@ public class Flocking : MonoBehaviour
     public float rotationSpeed = 2.0f;
     public float neighborRadius = 2.0f;
     public float separationDistance = 1.0f;
+
+    public int numSeagulls;
+    public GameObject seagull;
+
+    public float randomize;
+
+
+    private void Start()
+    {
+        for (int i = 0; i < numSeagulls; i++)
+        {
+            //seagulls = new GameObject[numSeagulls];
+
+            Vector3 pos = this.transform.position;
+            Vector3 randomize = Random.insideUnitSphere;
+            seagull = (GameObject)Instantiate(seagull, pos, Quaternion.LookRotation(randomize));
+            //seagull.GetComponent<Flock>().myManager = this;
+        }
+    }
+  
 
     private void Update()
     {

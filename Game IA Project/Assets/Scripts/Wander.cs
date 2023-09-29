@@ -1,9 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Wander : MonoBehaviour
 {
+    public NavMeshAgent agent;
     public float speed = 5;
     public float directionChangeInterval = 1;
     public float maxHeadingChange = 30;
@@ -24,6 +26,10 @@ public class Wander : MonoBehaviour
     {
         transform.eulerAngles = Vector3.Slerp(transform.eulerAngles, targetRotation, Time.deltaTime * directionChangeInterval);
         var forward = transform.TransformDirection(Vector3.forward);
+
+        transform.position += forward * Time.deltaTime;
+
+        agent.transform.position = this.transform.position;
     }
 
     IEnumerator NewHeading()
