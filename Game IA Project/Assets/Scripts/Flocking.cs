@@ -4,27 +4,26 @@ using UnityEngine;
 
 public class Flocking : MonoBehaviour
 {
+    public GameObject agentPrefab;
+    public int numAgents = 20;
+    public float spawnRadius = 5.0f;
+
     public float speed = 5.0f;
     public float rotationSpeed = 2.0f;
     public float neighborRadius = 2.0f;
     public float separationDistance = 1.0f;
-
-    public int numSeagulls;
-    public GameObject seagull;
 
     public float randomize;
 
 
     private void Start()
     {
-        for (int i = 0; i < numSeagulls; i++)
+        // Spawn the agents
+        for (int i = 0; i < numAgents; i++)
         {
-            //seagulls = new GameObject[numSeagulls];
-
-            Vector3 pos = this.transform.position;
-            Vector3 randomize = Random.insideUnitSphere;
-            seagull = (GameObject)Instantiate(seagull, pos, Quaternion.LookRotation(randomize));
-            //seagull.GetComponent<Flock>().myManager = this;
+            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
+            GameObject agent = Instantiate(agentPrefab, randomPosition, Quaternion.identity);
+            agent.transform.parent = transform; // Parent the agents to the manager
         }
     }
   
@@ -36,16 +35,6 @@ public class Flocking : MonoBehaviour
 
         Collider[] neighbors = Physics.OverlapSphere(transform.position, neighborRadius);
 
-        // Calculate neighbor center of mass
-        foreach (var neighbor in neighbors)
-        {
-            Vector3 centerOfMass;
-
-            if (neighbor.gameObject.CompareTag("gaviota"))
-            {
-                //center of mass
-            }
-        }
 
         foreach (var neighbor in neighbors)
         {
