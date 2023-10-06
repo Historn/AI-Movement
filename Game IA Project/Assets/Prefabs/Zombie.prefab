@@ -56,7 +56,7 @@ Camera:
     width: 1
     height: 1
   near clip plane: 0.3
-  far clip plane: 8
+  far clip plane: 5
   field of view: 30
   orthographic: 0
   orthographic size: 5
@@ -110,7 +110,7 @@ Transform:
   m_Children:
   - {fileID: 4052700376819752915}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4052700377695160348
 MeshFilter:
@@ -214,8 +214,9 @@ MonoBehaviour:
   wanderTimer: 2.5
   target: {fileID: 0}
   agentPrefab: {fileID: 4052700377695160337}
-  numAgents: 8
+  numAgents: 4
   spawnRadius: 5
+  neighborRadius: 2
   isDetected: 0
   frustum: {fileID: 4052700376819752925}
   mask:

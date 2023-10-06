@@ -16,6 +16,7 @@ public class Perception : MonoBehaviour
     public GameObject agentPrefab;
     public int numAgents = 8;
     public float spawnRadius = 2.0f;
+    public float neighborRadius = 2.0f;
 
     [SerializeField]
     bool isDetected = false;
@@ -23,16 +24,6 @@ public class Perception : MonoBehaviour
     public Camera frustum;
     public LayerMask mask;
 
-    void Awake()
-    {
-        // Spawn the agents
-        for (int i = 0; i < numAgents; i++)
-        {
-            Vector3 randomPosition = Random.insideUnitSphere * spawnRadius;
-            GameObject _agent = Instantiate(agentPrefab, randomPosition, Quaternion.identity);
-            _agent.transform.parent = transform; // Parent the agents to the manager
-        }
-    }
 
     void Start()
     {
@@ -41,6 +32,7 @@ public class Perception : MonoBehaviour
 
         // Start the wandering behavior
         StartCoroutine(Wander());
+        
     }
 
     void Update()
@@ -61,12 +53,14 @@ public class Perception : MonoBehaviour
                 ray.origin = ray.GetPoint(frustum.nearClipPlane);
 
                 if (Physics.Raycast(ray, out hit, frustum.farClipPlane, mask))
+                {
                     if (hit.collider.gameObject.CompareTag("Character"))
                     {
-                        BroadcastMessage("Detected", hit.collider.gameObject.transform);
+                        this.transform.parent.BroadcastMessage("Detected", hit.collider.gameObject.transform);
                     }
-                        
-                        
+                }
+    
+
             }
         }
 
@@ -83,8 +77,6 @@ public class Perception : MonoBehaviour
                 timer = 0;
             }
         }
-
-
     }
 
     IEnumerator Wander()
