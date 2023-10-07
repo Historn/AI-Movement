@@ -4,14 +4,13 @@ using UnityEngine;
 
 public class Flock : MonoBehaviour
 {
-    public FlockingManager myManager;
+    public FlockingManager flockingManager;
     float speed;
 
     // Use this for initialization
     void Start()
     {
-        speed = Random.Range(myManager.minSpeed,myManager.maxSpeed);
-
+        speed = Random.Range(flockingManager.minSpeed, flockingManager.maxSpeed);
     }
 
     // Update is called once per frame
@@ -19,13 +18,11 @@ public class Flock : MonoBehaviour
     {
         transform.Translate(0, 0, Time.deltaTime * speed);
         ApplyRules();
-
     }
 
     void ApplyRules()
     {
-        GameObject[] gos;
-        gos = myManager.allFish;
+        GameObject[] gos = flockingManager.allFish;
 
         Vector3 vcentre = Vector3.zero;
         Vector3 vavoid = Vector3.zero;
@@ -39,7 +36,7 @@ public class Flock : MonoBehaviour
             {
                 nDistance = Vector3.Distance(go.transform.position, this.transform.position);
 
-                if (nDistance <= myManager.neighbourDistance)
+                if (nDistance <= flockingManager.neighbourDistance)
                 {
                     vcentre += go.transform.position;
                     groupSize++;
@@ -63,7 +60,7 @@ public class Flock : MonoBehaviour
             Vector3 direction = (vcentre + vavoid) - transform.position;
 
             if (direction != Vector3.zero)
-                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), myManager.rotationSpeed * Time.deltaTime);
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), flockingManager.rotationSpeed * Time.deltaTime);
         }
     }
 }

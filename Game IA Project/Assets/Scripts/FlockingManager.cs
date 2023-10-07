@@ -12,14 +12,14 @@ public class FlockingManager : MonoBehaviour
 
     [Header("Fish Settings")]
     [Range(0.0f, 5.0f)]
-    public float minSpeed;
+    public float minSpeed = 1;
     [Range(0.0f, 5.0f)]
-    public float maxSpeed;
+    public float maxSpeed = 3;
 
     [Range(1.0f, 10.0f)]
-    public float neighbourDistance;
+    public float neighbourDistance = 2;
     [Range(0.0f, 5.0f)]
-    public float rotationSpeed;
+    public float rotationSpeed = 2;
 
     // Use this for initialization
     void Start()
@@ -29,18 +29,12 @@ public class FlockingManager : MonoBehaviour
         for (int i = 0; i < numFish; i++)
         {
             Vector3 pos = this.transform.position + new Vector3(Random.Range(-swimLimits.x, swimLimits.x),
-                                                                  Random.Range(-swimLimits.y, swimLimits.y),
-                                                                  Random.Range(-swimLimits.z, swimLimits.z));
+                                                                Random.Range(-swimLimits.y, swimLimits.y),
+                                                                Random.Range(-swimLimits.z, swimLimits.z));
 
             allFish[i] = (GameObject)Instantiate(fishPrefab, pos, Quaternion.identity);
-            allFish[i].GetComponent<Flock>().myManager = this;
+            //allFish[i].GetComponent<Flock>().flockingManager = this;
         }
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
 
     }
 }

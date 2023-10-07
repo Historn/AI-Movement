@@ -124,9 +124,9 @@ public class Perception : MonoBehaviour
     void SetColor()
     {
         if (isDetected)
-            rend.material.SetColor("color", Color.red);
+            rend.material.SetColor("_Color", Color.red);
         else
-            rend.material.SetColor("color", Color.yellow);
+            rend.material.SetColor("_Color", Color.yellow);
     }
 
 }
