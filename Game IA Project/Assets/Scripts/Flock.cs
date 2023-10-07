@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class Flock : MonoBehaviour
 {
-
-    public FlockManager myManager;
+    public FlockingManager myManager;
     float speed;
 
     // Use this for initialization
     void Start()
     {
-        speed = Random.Range(myManager.minSpeed,
-                                myManager.maxSpeed);
+        speed = Random.Range(myManager.minSpeed,myManager.maxSpeed);
 
     }
 
@@ -23,6 +21,7 @@ public class Flock : MonoBehaviour
         ApplyRules();
 
     }
+
     void ApplyRules()
     {
         GameObject[] gos;
@@ -39,6 +38,7 @@ public class Flock : MonoBehaviour
             if (go != this.gameObject)
             {
                 nDistance = Vector3.Distance(go.transform.position, this.transform.position);
+
                 if (nDistance <= myManager.neighbourDistance)
                 {
                     vcentre += go.transform.position;
@@ -61,11 +61,9 @@ public class Flock : MonoBehaviour
             speed = gSpeed / groupSize;
 
             Vector3 direction = (vcentre + vavoid) - transform.position;
-            if (direction != Vector3.zero)
-                transform.rotation = Quaternion.Slerp(transform.rotation,
-                                                      Quaternion.LookRotation(direction),
-                                                      myManager.rotationSpeed * Time.deltaTime);
 
+            if (direction != Vector3.zero)
+                transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction), myManager.rotationSpeed * Time.deltaTime);
         }
     }
 }

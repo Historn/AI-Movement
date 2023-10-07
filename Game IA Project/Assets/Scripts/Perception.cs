@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,6 +6,8 @@ using UnityEngine.AI;
 
 public class Perception : MonoBehaviour
 {
+    Renderer rend;
+
     public float wanderRadius = 10f;
     public float wanderTimer = 5f;
 
@@ -18,15 +21,17 @@ public class Perception : MonoBehaviour
     public float spawnRadius = 2.0f;
     public float neighborRadius = 2.0f;
 
-    [SerializeField]
-    bool isDetected = false;
+    public bool isDetected = false;
 
     public Camera frustum;
     public LayerMask mask;
 
+    
 
     void Start()
     {
+        rend = GetComponent<Renderer>();
+
         agent = GetComponent<NavMeshAgent>();
         timer = wanderTimer;
 
@@ -77,6 +82,8 @@ public class Perception : MonoBehaviour
                 timer = 0;
             }
         }
+
+        SetColor();
     }
 
     IEnumerator Wander()
@@ -94,7 +101,7 @@ public class Perception : MonoBehaviour
     // Generate a random point within a sphere (for wandering)
     Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
     {
-        Vector3 randomDirection = Random.insideUnitSphere * distance;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
 
         randomDirection += origin;
         NavMeshHit navHit;
@@ -112,6 +119,14 @@ public class Perception : MonoBehaviour
     {
         target = _target;
         isDetected = true;
+    }
+
+    void SetColor()
+    {
+        if (isDetected)
+            rend.material.SetColor("color", Color.red);
+        else
+            rend.material.SetColor("color", Color.yellow);
     }
 
 }
