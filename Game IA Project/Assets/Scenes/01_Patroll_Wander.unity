@@ -238,7 +238,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 14526865}
   m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -0.3899994, y: 1.5799999, z: 1.6000013}
+  m_LocalPosition: {x: -1.55, y: 1.5799999, z: 2.06}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -254,15 +254,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 14526865}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1d7ccb9ff9ec4ea9f2a56b23324e5, type: 3}
+  m_Script: {fileID: 11500000, guid: 02b1e1a941a76e244b3efaa236d0da90, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ghost: {fileID: 0}
-  agent: {fileID: 0}
-  randomWP: 0
-  randomDir: 0
-  patrolWP: 0
-  waypoints: []
+  agent: {fileID: 14526866}
+  target: {fileID: 1126081709}
+  maxJump: 0
 --- !u!1 &72591994
 GameObject:
   m_ObjectHideFlags: 0
