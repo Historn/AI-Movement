@@ -746,7 +746,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136385240}
   m_LocalRotation: {x: 0, y: 0.9914449, z: -0.13052616, w: 0}
-  m_LocalPosition: {x: 1.1900005, y: 8.44, z: 10.099999}
+  m_LocalPosition: {x: 1.1900005, y: 8, z: 24}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -955,7 +955,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1540101492}
   m_LocalRotation: {x: 0, y: 0.92387956, z: -0.38268343, w: 0}
-  m_LocalPosition: {x: 0.1, y: 13.33, z: 5.7}
+  m_LocalPosition: {x: 0.1, y: 16, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1078,10 +1078,13 @@ MonoBehaviour:
   numFish: 80
   allFish: []
   swimLimits: {x: 8, y: 3, z: 8}
-  minSpeed: 1
-  maxSpeed: 3
-  neighbourDistance: 2
-  rotationSpeed: 2
+  minSpeed: 1.92
+  maxSpeed: 4.01
+  neighbourDistance: 9.17
+  rotationSpeed: 1.81
+  alignmentWeight: 3.01
+  cohesionWeight: 2.59
+  separationWeight: 0.4
 --- !u!4 &1628307927
 Transform:
   m_ObjectHideFlags: 0
