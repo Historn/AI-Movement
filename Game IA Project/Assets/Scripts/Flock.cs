@@ -1,158 +1,145 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
+using System.Collections.Generic;
 
 public class Flock : MonoBehaviour
 {
-    public FlockingManager flockingManager;
-
-    private float speed;
+    public FlockingManager flockManager;
     private Vector3 moveDirection;
-    public Vector3 baseRotation;
-    public Vector3 acceleration;
-    public Vector3 velocity;
+    private float speed;
 
-    private Vector3 Position
+    public float updateInterval = 0.2f; 
+    private float timeSinceLastUpdate = 0f;
+
+    void Update()
     {
-        get
+        // Calculate the time since the last update
+        timeSinceLastUpdate += Time.deltaTime;
+
+        // Check if it's time to update behaviors
+        if (timeSinceLastUpdate >= updateInterval)
         {
-            return gameObject.transform.position;
+            // Reset the timer
+            timeSinceLastUpdate = 0f;
+
+            // Calculate the move direction for this fish based on flocking rules
+            Vector3 separation = Separate() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
+            Vector3 cohesion = Cohere() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
+            Vector3 alignment = Align() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
+
+            // Weights for each behavior
+            float separationWeight = flockManager.separationAmount;
+            float cohesionWeight = flockManager.cohesionAmount;
+            float alignmentWeight = flockManager.alignmentAmount;
+
+            // Calculate the combined move direction
+            moveDirection = (separation * separationWeight) + (cohesion * cohesionWeight) + (alignment * alignmentWeight);          
         }
-        set
+
+        // Limit the speed
+        speed = Mathf.Clamp(moveDirection.magnitude, 0, flockManager.maxSpeed);
+        moveDirection = moveDirection.normalized * speed;
+
+        // Apply the move direction
+        transform.position += moveDirection * Time.deltaTime;
+
+        // Rotate the fish to look in the move direction
+        if (moveDirection != Vector3.zero)
         {
-            gameObject.transform.position = value;
+            transform.rotation = Quaternion.LookRotation(moveDirection);
         }
+
+        ApplyBoundaries();
     }
 
-    private void Start()
+    // Avoid collisions with nearby fish
+    private Vector3 Separate()
     {
-        float angle = Random.Range(0, 2 * Mathf.PI);
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle) + baseRotation);
-        velocity = new Vector3(Mathf.Cos(angle), Mathf.Sin(angle), Mathf.Cos(angle));
-    }
+        Vector3 separationVector = Vector3.zero;
+        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
 
-    private void Update()
-    {
-        var boidColliders = Physics.OverlapSphere(Position, flockingManager.neighborhoodRadius);
-        var boids = boidColliders.Select(o => o.GetComponent<Flock>()).ToList();
-        boids.Remove(this);
-
-        Flocking(boids);
-        UpdateVelocity();
-        UpdatePosition();
-        UpdateRotation();
-
-        Bounds();
-    }
-
-    private void Flocking(IEnumerable<Flock> boids)
-    {
-        var alignment = Alignment(boids);
-        var separation = Separation(boids);
-        var cohesion = Cohesion(boids);
-
-        acceleration = flockingManager.alignmentAmount * alignment + flockingManager.cohesionAmount * cohesion + flockingManager.separationAmount * separation;
-    }
-
-    public void UpdateVelocity()
-    {
-        velocity += acceleration;
-        velocity = LimitMagnitude(velocity, flockingManager.maxSpeed);
-    }
-
-    private void UpdatePosition()
-    {
-        Position += velocity * Time.deltaTime;
-    }
-
-    private void UpdateRotation()
-    {
-        var angle = Mathf.Atan2(velocity.y, velocity.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle) + baseRotation);
-    }
-
-    private Vector3 Alignment(IEnumerable<Flock> boids)
-    {
-        var velocitySum = Vector3.zero;
-        if (!boids.Any()) return velocitySum;
-
-        foreach (var boid in boids)
+        foreach (GameObject fish in nearbyFish)
         {
-            velocitySum += boid.velocity;
-        }
-        velocitySum /= boids.Count();
+            if (fish != gameObject)
+            {
+                Vector3 separationDir = transform.position - fish.transform.position;
+                float distance = separationDir.magnitude;
 
-        var steer = Steer(velocitySum.normalized * flockingManager.maxSpeed);
-        return steer;
+                if (distance < flockManager.neighborhoodRadius)
+                {
+                    separationVector += separationDir.normalized / distance;
+                }
+            }
+        }
+
+        return separationVector;
     }
 
-    private Vector3 Cohesion(IEnumerable<Flock> boids)
+    // Move towards the center of mass of nearby fish
+    private Vector3 Cohere()
     {
-        if (!boids.Any()) return Vector3.zero;
+        Vector3 cohesionVector = Vector3.zero;
+        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
 
-        var sumPositions = Vector3.zero;
-        foreach (var boid in boids)
+        foreach (GameObject fish in nearbyFish)
         {
-            sumPositions += boid.Position;
+            if (fish != gameObject)
+            {
+                cohesionVector += fish.transform.position;
+            }
         }
-        var average = sumPositions / boids.Count();
-        var direction = average - Position;
 
-        var steer = Steer(direction.normalized * flockingManager.maxSpeed);
-        return steer;
-    }
-
-    private Vector3 Separation(IEnumerable<Flock> boids)
-    {
-        var direction = Vector3.zero;
-        boids = boids.Where(o => DistanceTo(o) <= flockingManager.neighborhoodRadius / 2);
-        if (!boids.Any()) return direction;
-
-        foreach (var boid in boids)
+        if (nearbyFish.Count > 0)
         {
-            var difference = Position - boid.Position;
-            direction += difference.normalized / difference.magnitude;
+            cohesionVector /= nearbyFish.Count;
+            cohesionVector = cohesionVector - transform.position;
         }
-        direction /= boids.Count();
 
-        var steer = Steer(direction.normalized * flockingManager.maxSpeed);
-        return steer;
+        return cohesionVector;
     }
 
-    private Vector3 Steer(Vector3 desired)
+    // Align with the average heading of nearby fish
+    private Vector3 Align()
     {
-        var steer = desired - velocity;
-        steer = LimitMagnitude(steer, flockingManager.maxForce);
+        Vector3 alignmentVector = Vector3.zero;
+        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
 
-        return steer;
-    }
-
-    private float DistanceTo(Flock boid)
-    {
-        return Vector3.Distance(boid.transform.position, Position);
-    }
-
-    private Vector3 LimitMagnitude(Vector3 baseVector, float maxMagnitude)
-    {
-        if (baseVector.sqrMagnitude > maxMagnitude * maxMagnitude)
+        foreach (GameObject fish in nearbyFish)
         {
-            baseVector = baseVector.normalized * maxMagnitude;
+            if (fish != gameObject)
+            {
+                alignmentVector += fish.transform.forward;
+            }
         }
-        return baseVector;
+
+        if (nearbyFish.Count > 0)
+        {
+            alignmentVector /= nearbyFish.Count;
+        }
+
+        return alignmentVector;
     }
 
-    void Bounds()
+    private void ApplyBoundaries()
     {
-        transform.Translate(moveDirection * speed * Time.deltaTime, Space.World);
+        Vector3 position = transform.position;
+        Vector3 flockManagerPosition = flockManager.transform.position;
+        Vector3 boundaries = flockManager.swimLimits;
 
-        // Keep the fish inside bounds
-        Vector3 newPosition = transform.position;
+        // Calculate the half-size of the fish's bounding box
+        Vector3 halfSize = Vector3.one * 0.5f;
 
-        if (newPosition.x < -flockingManager.swimLimits.x || newPosition.x > flockingManager.swimLimits.x ||
-            newPosition.y < -flockingManager.swimLimits.y || newPosition.y > flockingManager.swimLimits.y ||
-            newPosition.z < -flockingManager.swimLimits.z || newPosition.z > flockingManager.swimLimits.z)
-        {
-            moveDirection = -moveDirection; // Reverse direction
-        }
+        // Calculate the minimum and maximum positions within boundaries
+        Vector3 minPosition = flockManagerPosition - boundaries + halfSize;
+        Vector3 maxPosition = flockManagerPosition + boundaries - halfSize;
+
+        // Clamp the fish's position within the boundaries
+        position = new Vector3(
+            Mathf.Clamp(position.x, minPosition.x, maxPosition.x),
+            Mathf.Clamp(position.y, minPosition.y, maxPosition.y),
+            Mathf.Clamp(position.z, minPosition.z, maxPosition.z)
+        );
+
+        // Update the fish's position
+        transform.position = position;
     }
 }

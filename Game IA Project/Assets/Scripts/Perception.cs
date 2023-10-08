@@ -36,8 +36,7 @@ public class Perception : MonoBehaviour
         timer = wanderTimer;
 
         // Start the wandering behavior
-        StartCoroutine(Wander());
-        
+        StartCoroutine(Wander());       
     }
 
     void Update()

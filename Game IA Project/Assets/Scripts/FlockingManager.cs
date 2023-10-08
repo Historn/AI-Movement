@@ -10,33 +10,17 @@ public class FlockingManager : MonoBehaviour
     public GameObject[] allFish;
     public Vector3 swimLimits = new Vector3(5, 5, 5);
 
-    //[Header("Fish Settings")]
-    //[Range(0.0f, 5.0f)]
-    //public float minSpeed = 1;
-    //[Range(0.0f, 5.0f)]
-    //public float maxSpeed = 3;
-    //[Range(1.0f, 10.0f)]
-    //public float neighbourDistance = 2;
-    //[Range(0.0f, 5.0f)]
-    //public float rotationSpeed = 2;
-
-    //[Header("Flock Settings")]
-    //[Range(0.0f, 5.0f)]
-    //public float alignmentWeight = 1.0f;
-    //[Range(0.0f, 5.0f)]
-    //public float cohesionWeight = 1.0f;
-    //[Range(0.0f, 5.0f)]
-    //public float separationWeight = 1.0f;
 
     [Header("Flock Settings")]
+
+    [Range(0, 5)]
+    public float randomFactor = 0.2f;
+
     [Range(0, 10)]
     public float maxSpeed = 1f;
 
-    [Range(.1f, .5f)]
-    public float maxForce = .03f;
-
     [Range(1, 10)]
-    public float neighborhoodRadius = 3f;
+    public float neighborhoodRadius = 1f;
 
     [Range(0, 3)]
     public float separationAmount = 1f;
@@ -48,7 +32,6 @@ public class FlockingManager : MonoBehaviour
     public float alignmentAmount = 1f;
 
 
-    // Use this for initialization
     void Start()
     {
         allFish = new GameObject[numFish];
@@ -58,15 +41,36 @@ public class FlockingManager : MonoBehaviour
             Vector3 pos = this.transform.position + new Vector3(Random.Range(-swimLimits.x, swimLimits.x),
                                                                 Random.Range(-swimLimits.y, swimLimits.y),
                                                                 Random.Range(-swimLimits.z, swimLimits.z));
+           
 
-            allFish[i] = (GameObject)Instantiate(fishPrefab, pos, Quaternion.identity);
+            allFish[i] = (GameObject)Instantiate(fishPrefab, pos, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
 
             Flock flockComponent = allFish[i].GetComponent<Flock>();
             if (flockComponent != null)
             {
-                flockComponent.flockingManager = this;
+                flockComponent.flockManager = this;
             }
         }
 
+    }
+
+    public List<GameObject> GetNearbyFish(Vector3 position)
+    {
+        List<GameObject> nearbyFish = new List<GameObject>();
+
+        foreach (GameObject fish in allFish)
+        {
+            if (fish != null && fish != gameObject)
+            {
+                float distance = Vector3.Distance(position, fish.transform.position);
+
+                if (distance <= neighborhoodRadius)
+                {
+                    nearbyFish.Add(fish);
+                }
+            }
+        }
+
+        return nearbyFish;
     }
 }
