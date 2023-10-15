@@ -44,6 +44,9 @@ public class FlockingManager : MonoBehaviour
     [Range(0, 10)]
     public float alignmentWeight = 0.2f;
 
+    [Range(0, 20)]
+    public float boundsWeight = 10f;
+
 
     public Flock[] allFish { get; set; }
 

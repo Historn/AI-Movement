@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 5089212301554166798}
   - component: {fileID: 8416769116090196086}
   - component: {fileID: 825916523110247567}
+  - component: {fileID: 4151912355525931302}
   m_Layer: 0
   m_Name: Bee
   m_TagString: gaviota
@@ -28,7 +29,7 @@ Transform:
   m_GameObject: {fileID: 810569919388359399}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 17.278, y: 7.374, z: 2.8}
-  m_LocalScale: {x: 0.8162362, y: 0.8162362, z: 0.8162362}
+  m_LocalScale: {x: 0.10920424, y: 0.10920424, z: 0.10920424}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -98,3 +99,15 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &4151912355525931302
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810569919388359399}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 18dc763383e99f448ba8433377cfc213, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

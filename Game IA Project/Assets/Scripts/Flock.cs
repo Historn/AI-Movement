@@ -31,13 +31,13 @@ public class Flock : MonoBehaviour
         Vector3 cohesion = CohereVector() * flockManager.cohesionWeight;
         Vector3 separation = SeparateVector() * flockManager.separationWeight;
         Vector3 alignment = AlignVector() * flockManager.alignmentWeight;
-        Vector3 bounds = BoundsVector();
+        Vector3 bounds = BoundsVector() * flockManager.boundsWeight;
 
         //(1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
 
         moveDirection = cohesion + separation + alignment + bounds;
 
-        moveDirection = Vector3.SmoothDamp(myTransform.forward, moveDirection, ref currentVelocity, 6.5f);
+        moveDirection = Vector3.SmoothDamp(myTransform.forward, moveDirection, ref currentVelocity, 3.5f);
 
         //speed = Mathf.Clamp(moveDirection.magnitude, flockManager.minSpeed, flockManager.maxSpeed);
         moveDirection = moveDirection.normalized * speed;
