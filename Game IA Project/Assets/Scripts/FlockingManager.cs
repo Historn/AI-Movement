@@ -5,66 +5,80 @@ using UnityEngine;
 
 public class FlockingManager : MonoBehaviour
 {
-    public GameObject fishPrefab;
+    [Header("Spawn")]
+    public Flock fishPrefab;
     public int numFish = 20;
-    public GameObject[] allFish;
-    public Vector3 swimLimits = new Vector3(5, 5, 5);
+    [Range(1, 10)]
+    public float bounds = 5f;
 
 
-    [Header("Flock Settings")]
+    [Header("Speed")]
+    [Range(0, 10)]
+    public float minSpeed = 1f;
 
+    [Range(0, 10)]
+    public float maxSpeed = 3f;
+    
+
+    [Header("Detection Distance")]
+    [Range(0, 10)]
+    public float cohesionDistance = 5f;
+
+    [Range(0, 10)]
+    public float separationDistance = 2f;
+
+    [Range(0, 10)]
+    public float alignmentDistance = 2f;
+
+
+    [Header("Weights")]
     [Range(0, 5)]
     public float randomFactor = 0.2f;
 
     [Range(0, 10)]
-    public float maxSpeed = 1f;
+    public float cohesionWeight = 2f;
 
-    [Range(1, 10)]
-    public float neighborhoodRadius = 1f;
+    [Range(0, 10)]
+    public float separationWeight = 1f;
 
-    [Range(0, 3)]
-    public float separationAmount = 1f;
+    [Range(0, 10)]
+    public float alignmentWeight = 0.2f;
 
-    [Range(0, 3)]
-    public float cohesionAmount = 1f;
 
-    [Range(0, 3)]
-    public float alignmentAmount = 1f;
+    public Flock[] allFish { get; set; }
 
 
     void Start()
     {
-        allFish = new GameObject[numFish];
+        allFish = new Flock[numFish];
 
         for (int i = 0; i < numFish; i++)
         {
-            Vector3 pos = this.transform.position + new Vector3(Random.Range(-swimLimits.x, swimLimits.x),
-                                                                Random.Range(-swimLimits.y, swimLimits.y),
-                                                                Random.Range(-swimLimits.z, swimLimits.z));
-           
+            Vector3 spawnPos = this.transform.position + new Vector3(Random.Range(1, 5),
+                                                                Random.Range(1, 5),
+                                                                Random.Range(1, 5));
 
-            allFish[i] = (GameObject)Instantiate(fishPrefab, pos, Quaternion.Euler(Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f), Random.Range(0.0f, 360.0f)));
 
-            Flock flockComponent = allFish[i].GetComponent<Flock>();
-            if (flockComponent != null)
-            {
-                flockComponent.flockManager = this;
-            }
+            Quaternion spawnRot = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
+
+            allFish[i] = Instantiate(fishPrefab, spawnPos, spawnRot);
+            allFish[i].AssignFlockManager(this);
+            allFish[i].SetSpeed(UnityEngine.Random.Range(minSpeed, maxSpeed));
         }
 
     }
 
-    public List<GameObject> GetNearbyFish(Vector3 position)
+    public List<Flock> GetNearbyFish(Vector3 position, float detectionDistance)
     {
-        List<GameObject> nearbyFish = new List<GameObject>();
+        List<Flock> nearbyFish = new List<Flock>();
 
-        foreach (GameObject fish in allFish)
+        foreach (Flock fish in allFish)
         {
             if (fish != null && fish != gameObject)
             {
                 float distance = Vector3.Distance(position, fish.transform.position);
 
-                if (distance <= neighborhoodRadius)
+                if (distance <= detectionDistance)
                 {
                     nearbyFish.Add(fish);
                 }

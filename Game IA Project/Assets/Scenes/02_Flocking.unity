@@ -1053,8 +1053,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1628307927}
-  - component: {fileID: 1628307926}
   - component: {fileID: 1628307928}
+  - component: {fileID: 1628307929}
   m_Layer: 0
   m_Name: Swimming Space
   m_TagString: Untagged
@@ -1062,28 +1062,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1628307926
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628307925}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 88540955a64a7b84db019120758c7cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  fishPrefab: {fileID: 2206852426022253465, guid: de500f6b90f89bc4c87a6585b2dea01a, type: 3}
-  numFish: 80
-  allFish: []
-  swimLimits: {x: 8, y: 3, z: 8}
-  randomFactor: 0.2
-  maxSpeed: 4.01
-  neighborhoodRadius: 3
-  separationAmount: 1
-  cohesionAmount: 1
-  alignmentAmount: 1
 --- !u!4 &1628307927
 Transform:
   m_ObjectHideFlags: 0
@@ -1112,6 +1090,30 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 16, y: 6, z: 16}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1628307929
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1628307925}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 88540955a64a7b84db019120758c7cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  fishPrefab: {fileID: 7435494137440672979, guid: de500f6b90f89bc4c87a6585b2dea01a, type: 3}
+  numFish: 50
+  bounds: 5
+  minSpeed: 1
+  maxSpeed: 3
+  cohesionDistance: 5
+  separationDistance: 2
+  alignmentDistance: 2
+  randomFactor: 0.2
+  cohesionWeight: 2
+  separationWeight: 1
+  alignmentWeight: 0.2
 --- !u!1001 &1727732810
 PrefabInstance:
   m_ObjectHideFlags: 0

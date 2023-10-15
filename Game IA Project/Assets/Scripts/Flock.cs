@@ -3,111 +3,109 @@ using System.Collections.Generic;
 
 public class Flock : MonoBehaviour
 {
-    public FlockingManager flockManager;
+    private FlockingManager flockManager;
     private Vector3 moveDirection;
     private float speed;
+    private Vector3 currentVelocity;
 
-    public float updateInterval = 0.2f; 
-    private float timeSinceLastUpdate = 0f;
+
+    public Transform myTransform { get; set; }
+
+    public void AssignFlockManager(FlockingManager flockingManager)
+    {
+        flockManager = flockingManager;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        this.speed = speed;
+    }
+
+    private void Awake()
+    {
+        myTransform = transform;
+    }
 
     void Update()
     {
-        // Calculate the time since the last update
-        timeSinceLastUpdate += Time.deltaTime;
+        Vector3 cohesion = CohereVector() * flockManager.cohesionWeight;
+        Vector3 separation = SeparateVector() * flockManager.separationWeight;
+        Vector3 alignment = AlignVector() * flockManager.alignmentWeight;
+        Vector3 bounds = BoundsVector();
 
-        // Check if it's time to update behaviors
-        if (timeSinceLastUpdate >= updateInterval)
-        {
-            // Reset the timer
-            timeSinceLastUpdate = 0f;
+        //(1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
 
-            // Calculate the move direction for this fish based on flocking rules
-            Vector3 separation = Separate() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
-            Vector3 cohesion = Cohere() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
-            Vector3 alignment = Align() * (1 + Random.Range(-flockManager.randomFactor, flockManager.randomFactor));
+        moveDirection = cohesion + separation + alignment + bounds;
 
-            // Weights for each behavior
-            float separationWeight = flockManager.separationAmount;
-            float cohesionWeight = flockManager.cohesionAmount;
-            float alignmentWeight = flockManager.alignmentAmount;
+        moveDirection = Vector3.SmoothDamp(myTransform.forward, moveDirection, ref currentVelocity, 6.5f);
 
-            // Calculate the combined move direction
-            moveDirection = (separation * separationWeight) + (cohesion * cohesionWeight) + (alignment * alignmentWeight);          
-        }
-
-        // Limit the speed
-        speed = Mathf.Clamp(moveDirection.magnitude, 0, flockManager.maxSpeed);
+        //speed = Mathf.Clamp(moveDirection.magnitude, flockManager.minSpeed, flockManager.maxSpeed);
         moveDirection = moveDirection.normalized * speed;
 
-        // Apply the move direction
-        transform.position += moveDirection * Time.deltaTime;
+        if (moveDirection == Vector3.zero)
+            moveDirection = myTransform.forward;
 
-        // Rotate the fish to look in the move direction
-        if (moveDirection != Vector3.zero)
-        {
-            transform.rotation = Quaternion.LookRotation(moveDirection);
-        }
-
-        ApplyBoundaries();
-    }
-
-    // Avoid collisions with nearby fish
-    private Vector3 Separate()
-    {
-        Vector3 separationVector = Vector3.zero;
-        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
-
-        foreach (GameObject fish in nearbyFish)
-        {
-            if (fish != gameObject)
-            {
-                Vector3 separationDir = transform.position - fish.transform.position;
-                float distance = separationDir.magnitude;
-
-                if (distance < flockManager.neighborhoodRadius)
-                {
-                    separationVector += separationDir.normalized / distance;
-                }
-            }
-        }
-
-        return separationVector;
+        myTransform.forward = moveDirection;
+        myTransform.position += moveDirection * Time.deltaTime;
     }
 
     // Move towards the center of mass of nearby fish
-    private Vector3 Cohere()
+    private Vector3 CohereVector()
     {
         Vector3 cohesionVector = Vector3.zero;
-        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
+        List<Flock> nearbyFish = flockManager.GetNearbyFish(myTransform.position, flockManager.cohesionDistance);
 
-        foreach (GameObject fish in nearbyFish)
+        foreach (Flock fish in nearbyFish)
         {
             if (fish != gameObject)
             {
-                cohesionVector += fish.transform.position;
+                cohesionVector += fish.myTransform.position;
             }
         }
 
         if (nearbyFish.Count > 0)
         {
             cohesionVector /= nearbyFish.Count;
-            cohesionVector = cohesionVector - transform.position;
+            cohesionVector = cohesionVector - myTransform.position;
         }
 
-        return cohesionVector;
+        return cohesionVector.normalized;
     }
 
-    // Align with the average heading of nearby fish
-    private Vector3 Align()
+    // Avoid collisions with nearby fish
+    private Vector3 SeparateVector()
     {
-        Vector3 alignmentVector = Vector3.zero;
-        List<GameObject> nearbyFish = flockManager.GetNearbyFish(transform.position);
+        Vector3 separationVector = Vector3.zero;
+        List<Flock> nearbyFish = flockManager.GetNearbyFish(myTransform.position, flockManager.separationDistance);
 
-        foreach (GameObject fish in nearbyFish)
+        foreach (Flock fish in nearbyFish)
         {
             if (fish != gameObject)
             {
-                alignmentVector += fish.transform.forward;
+                Vector3 separationDir = myTransform.position - fish.myTransform.position;
+                float distance = separationDir.magnitude;
+
+                if (distance < flockManager.separationDistance)
+                {
+                    separationVector += separationDir.normalized / distance;
+                }
+            }
+        }
+
+        return separationVector.normalized;
+    }
+
+    // Align with the average heading of nearby fish
+    private Vector3 AlignVector()
+    {
+        Vector3 alignmentVector = Vector3.zero;
+        List<Flock> nearbyFish = flockManager.GetNearbyFish(myTransform.position, flockManager.alignmentDistance);
+
+        foreach (Flock fish in nearbyFish)
+        {
+            if (fish != gameObject)
+            {
+                alignmentVector += fish.myTransform.forward;
             }
         }
 
@@ -116,30 +114,13 @@ public class Flock : MonoBehaviour
             alignmentVector /= nearbyFish.Count;
         }
 
-        return alignmentVector;
+        return alignmentVector.normalized;
     }
 
-    private void ApplyBoundaries()
+    private Vector3 BoundsVector()
     {
-        Vector3 position = transform.position;
-        Vector3 flockManagerPosition = flockManager.transform.position;
-        Vector3 boundaries = flockManager.swimLimits;
-
-        // Calculate the half-size of the fish's bounding box
-        Vector3 halfSize = Vector3.one * 0.5f;
-
-        // Calculate the minimum and maximum positions within boundaries
-        Vector3 minPosition = flockManagerPosition - boundaries + halfSize;
-        Vector3 maxPosition = flockManagerPosition + boundaries - halfSize;
-
-        // Clamp the fish's position within the boundaries
-        position = new Vector3(
-            Mathf.Clamp(position.x, minPosition.x, maxPosition.x),
-            Mathf.Clamp(position.y, minPosition.y, maxPosition.y),
-            Mathf.Clamp(position.z, minPosition.z, maxPosition.z)
-        );
-
-        // Update the fish's position
-        transform.position = position;
+        var offsetToCenter = flockManager.transform.position - myTransform.position;
+        bool isNearCenter = (offsetToCenter.magnitude >= flockManager.bounds * 0.9f);
+        return isNearCenter ? offsetToCenter.normalized : Vector3.zero;
     }
 }
