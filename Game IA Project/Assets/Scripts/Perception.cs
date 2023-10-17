@@ -8,6 +8,9 @@ public class Perception : MonoBehaviour
 {
     Renderer rend;
 
+    [SerializeField]
+    AI_Movement movement;
+
     public float wanderRadius = 10f;
     public float wanderTimer = 5f;
 
@@ -26,17 +29,16 @@ public class Perception : MonoBehaviour
     public Camera frustum;
     public LayerMask mask;
 
-    
 
     void Start()
     {
         rend = GetComponent<Renderer>();
-
         agent = GetComponent<NavMeshAgent>();
         timer = wanderTimer;
+        movement = GetComponent<AI_Movement>();
 
         // Start the wandering behavior
-        StartCoroutine(Wander());       
+        StartCoroutine(movement.Wander(wanderRadius, wanderTimer, agent));       
     }
 
     void Update()
@@ -63,55 +65,24 @@ public class Perception : MonoBehaviour
                         this.transform.parent.BroadcastMessage("Detected", hit.collider.gameObject.transform);
                     }
                 }
-    
-
             }
         }
 
         if (isDetected)
         {
-            Seek();
+            movement.Seek(agent, target);
         }
         else
         {
             // Check if it's time to choose a new wander destination
             if (timer >= wanderTimer)
             {
-                StartCoroutine(Wander());
+                StartCoroutine(movement.Wander(wanderRadius, wanderTimer, agent));
                 timer = 0;
             }
         }
 
         SetColor();
-    }
-
-    IEnumerator Wander()
-    {
-        // Pick a random point within the wanderRadius
-        Vector3 newPos = RandomNavSphere(transform.position, wanderRadius, -1);
-
-        // Set the NavMeshAgent's destination to the new position
-        agent.SetDestination(newPos);
-
-        // Wait for a short time before choosing a new destination
-        yield return new WaitForSeconds(wanderTimer);
-    }
-
-    // Generate a random point within a sphere (for wandering)
-    Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
-    {
-        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
-
-        randomDirection += origin;
-        NavMeshHit navHit;
-        NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
-
-        return navHit.position;
-    }
-
-    void Seek()
-    {
-        agent.destination = target.transform.position;
     }
 
     void Detected(Transform _target)
