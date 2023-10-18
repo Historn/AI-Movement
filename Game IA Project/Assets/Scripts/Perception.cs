@@ -9,7 +9,6 @@ public class Perception : MonoBehaviour
     Renderer rend;
 
     [SerializeField]
-    AI_Movement movement;
 
     public float wanderRadius = 10f;
     public float wanderTimer = 5f;
@@ -35,10 +34,9 @@ public class Perception : MonoBehaviour
         rend = GetComponent<Renderer>();
         agent = GetComponent<NavMeshAgent>();
         timer = wanderTimer;
-        movement = GetComponent<AI_Movement>();
 
         // Start the wandering behavior
-        StartCoroutine(movement.Wander(wanderRadius, wanderTimer, agent));       
+        StartCoroutine(AI_Movement.Wander(wanderRadius, wanderTimer, agent));
     }
 
     void Update()
@@ -70,14 +68,14 @@ public class Perception : MonoBehaviour
 
         if (isDetected)
         {
-            movement.Seek(agent, target);
+            AI_Movement.Seek(agent, target);
         }
         else
         {
             // Check if it's time to choose a new wander destination
             if (timer >= wanderTimer)
             {
-                StartCoroutine(movement.Wander(wanderRadius, wanderTimer, agent));
+                StartCoroutine(AI_Movement.Wander(wanderRadius, wanderTimer, agent));
                 timer = 0;
             }
         }

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class Spawn : MonoBehaviour
 {
-
     public GameObject agentPrefab;
     public int numAgents = 8;
     public float spawnRadius = 2.0f;

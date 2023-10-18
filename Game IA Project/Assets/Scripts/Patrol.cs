@@ -10,51 +10,38 @@ public class Patrol : MonoBehaviour
     [SerializeField]
     private GameObject ghost;
 
-    public NavMeshAgent agent;
+    [SerializeField]
+    private GameObject patroler;
 
-    public Int32 randomWP;
-    public Int32 randomDir;
+    private NavMeshAgent ghostAgent;
+    private NavMeshAgent patrolAgent;
 
-    public int patrolWP = 0;
+    public Int32 initialDir;
+    public Int32 wpIndex;
+
     public GameObject[] waypoints;
     
 
     void Start()
     {
         ghost = this.gameObject;
-        agent = ghost.GetComponent<NavMeshAgent>();
+        ghostAgent = ghost.GetComponent<NavMeshAgent>();
+        patrolAgent = patroler.GetComponent<NavMeshAgent>();
 
-        randomWP = UnityEngine.Random.Range(0, waypoints.Length);
-        patrolWP = randomWP;
-        ghost.transform.position = waypoints[randomWP].transform.position;
+        initialDir = UnityEngine.Random.Range(0, 2);
+        wpIndex = UnityEngine.Random.Range(0, waypoints.Length);
 
-        randomDir = UnityEngine.Random.Range(0, 10);
+        ghost.transform.position = waypoints[wpIndex].transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!agent.pathPending && agent.remainingDistance < 0.5f) FollowPath();
-    }
-
-    void FollowPath()
-    {
-        if(randomDir % 2 == 0)
-            patrolWP = (patrolWP + 1) % waypoints.Length;
-        else
+        if (!ghostAgent.pathPending && ghostAgent.remainingDistance < 0.5f)
         {
-            if(patrolWP <= 0)
-                patrolWP = waypoints.Length;
-
-            patrolWP = (patrolWP - 1) % waypoints.Length;
+            wpIndex = AI_Movement.FollowPatrolPath(initialDir, wpIndex, waypoints, ghostAgent);
         }
-            
 
-        Seek();
-    }
-
-    void Seek()
-    {
-        agent.destination = waypoints[patrolWP].transform.position;
+        AI_Movement.Seek(patrolAgent, ghost.transform);
     }
 }
