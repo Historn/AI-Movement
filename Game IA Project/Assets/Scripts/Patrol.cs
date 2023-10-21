@@ -39,9 +39,9 @@ public class Patrol : MonoBehaviour
     {
         if (!ghostAgent.pathPending && ghostAgent.remainingDistance < 0.5f)
         {
-            wpIndex = AI_Movement.FollowPatrolPath(initialDir, wpIndex, waypoints, ghostAgent);
+            wpIndex = AI.Movement.FollowPatrolPath(initialDir, wpIndex, waypoints, ghostAgent);
         }
 
-        AI_Movement.Seek(patrolAgent, ghost.transform);
+        AI.Movement.Seek(patrolAgent, ghost.transform);
     }
 }
