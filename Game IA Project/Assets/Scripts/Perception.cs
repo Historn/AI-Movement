@@ -8,16 +8,12 @@ using UnityEngine.AI;
 public class Perception : MonoBehaviour
 {
     [SerializeField]
-    public float wanderRadius = 10f;
-    public float wanderTimer = 5f;
+    private float wanderRadius = 10f;
+    [SerializeField]
+    private float wanderTimer = 5f;
 
     public Transform target;
     private NavMeshAgent agent;
-
-    public GameObject agentPrefab;
-    public int numAgents = 8;
-    public float spawnRadius = 2.0f;
-    public float neighborRadius = 2.0f;
 
     public bool isDetected = false;
 
@@ -33,37 +29,29 @@ public class Perception : MonoBehaviour
         rend = GetComponent<Renderer>();
         agent = GetComponent<NavMeshAgent>();
 
-        SetColor();
+        AI.Utils.SetColor(rend, Color.yellow);
 
-        while (enabled)
-            yield return WanderSeek();
+        while (!isDetected)
+            yield return StartCoroutine(AI.Movement.Wander(agent, wanderRadius, wanderTimer));
     }
 
-    IEnumerator WanderSeek()
+    private void Update()
     {
-        while (!isDetected)
+        if (!isDetected)
         {
             if (AI.Detection.Search("Character", this.gameObject, frustum, mask, out hit))
                 this.transform.parent.BroadcastMessage("Detected", hit.collider.gameObject.transform);
-
-            yield return AI.Movement.Wander(agent, wanderRadius, wanderTimer);
         }
-
-        AI.Movement.Seek(agent, target);
+        else
+        {
+            AI.Movement.Seek(agent, target);
+        }
     }
 
     void Detected(Transform _target)
     {
         target = _target;
         isDetected = true;
-        SetColor();
-    }
-
-    void SetColor()
-    {
-        if (isDetected)
-            rend.material.SetColor("_Color", Color.red);
-        else
-            rend.material.SetColor("_Color", Color.yellow);
+        AI.Utils.SetColor(rend, Color.red);
     }
 }

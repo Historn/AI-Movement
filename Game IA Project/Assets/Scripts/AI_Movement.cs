@@ -120,5 +120,10 @@ public static class AI
         {
             Debug.DrawRay(ray.origin, ray.direction * 3, color, duration);
         }
+
+        public static void SetColor(Renderer rend,  Color color)
+        {
+            rend.material.SetColor("_Color", color);
+        }
     }   
 }
