@@ -3,7 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEditor;
 using System.Linq;
+using TMPro;
+using UnityEngine.UIElements;
 
 public static class AI
 {
@@ -12,7 +15,7 @@ public static class AI
     {
         public static void Seek(NavMeshAgent agent, Transform target)
         {
-            agent.destination = target.transform.position;
+            agent.destination = target.position;
         }
 
         public static IEnumerator Wander(NavMeshAgent agent, float wanderRadius, float wanderTimer)
@@ -75,55 +78,51 @@ public static class AI
 
             foreach (Collider col in colliders)
             {
-                if (col.gameObject != go && GeometryUtility.TestPlanesAABB(planes, col.bounds))
-                {
-                    ray.origin = go.transform.position;
-                    ray.direction = (col.transform.position - go.transform.position).normalized;
-                    ray.origin = ray.GetPoint(frustum.nearClipPlane);
+                if (col.gameObject == go || !GeometryUtility.TestPlanesAABB(planes, col.bounds))
+                    continue;
 
-                    if (Physics.Raycast(ray, out hit, frustum.farClipPlane, mask))
-                    {
-                        if (hit.collider.gameObject.CompareTag(tag))
-                        {
-                            return true;
-                        }
-                    }
-                }
+                ray.origin = go.transform.position;
+                ray.direction = (col.transform.position - go.transform.position).normalized;
+                ray.origin = ray.GetPoint(frustum.nearClipPlane);
+
+                if (!Physics.Raycast(ray, out hit, frustum.farClipPlane, mask))
+                    continue;
+
+                if (hit.collider.gameObject.CompareTag(tag))
+                    return true;
             }
-
             return false;
         }
     }
+}
 
-
-    // UTILS ======================================================
-    public static class Utils
+   
+public static class Utils
+{
+    // Generate a random point within a sphere on NavMesh
+    public static Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
     {
-        // Generate a random point within a sphere on NavMesh
-        public static Vector3 RandomNavSphere(Vector3 origin, float distance, int layermask)
-        {
-            Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
+        Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * distance;
 
-            randomDirection += origin;
-            NavMeshHit navHit;
-            NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
+        randomDirection += origin;
+        NavMeshHit navHit;
+        NavMesh.SamplePosition(randomDirection, out navHit, distance, layermask);
 
-            return navHit.position;
-        }
+        return navHit.position;
+    }    
 
-        public static bool inRange(GameObject a, GameObject b, float range)
-        {
-            return Vector3.Distance(a.transform.position, b.transform.position) <= range ? true : false;
-        }
+    public static bool inRange(GameObject a, GameObject b, float range)
+    {
+        return Vector3.Distance(a.transform.position, b.transform.position) <= range ? true : false;
+    }
 
-        public static void DrawRay(Ray ray, Color color, float duration = 0.0f)
-        {
-            Debug.DrawRay(ray.origin, ray.direction * 3, color, duration);
-        }
+    public static void DrawRay(Ray ray, Color color, float duration = 0.0f)
+    {
+        Debug.DrawRay(ray.origin, ray.direction * 3, color, duration);
+    }
 
-        public static void SetColor(Renderer rend,  Color color)
-        {
-            rend.material.SetColor("_Color", color);
-        }
-    }   
+    public static void SetColor(Renderer rend, Color color)
+    {
+        rend.material.SetColor("_Color", color);
+    }
 }

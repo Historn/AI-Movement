@@ -11,7 +11,6 @@ GameObject:
   - component: {fileID: 2796777951464225769}
   - component: {fileID: 2796777951464225768}
   - component: {fileID: 2796777951464225771}
-  - component: {fileID: 2796777951464225781}
   - component: {fileID: 2796777951464225780}
   m_Layer: 0
   m_Name: Ghost
@@ -85,33 +84,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &2796777951464225781
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2796777951464225783}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6df1d7ccb9ff9ec4ea9f2a56b23324e5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghost: {fileID: 0}
-  patroler: {fileID: 0}
-  initialDir: 0
-  wpIndex: 0
-  waypoints:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!195 &2796777951464225780
 NavMeshAgent:
   m_ObjectHideFlags: 0

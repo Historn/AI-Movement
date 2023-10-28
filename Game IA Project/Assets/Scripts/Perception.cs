@@ -29,7 +29,7 @@ public class Perception : MonoBehaviour
         rend = GetComponent<Renderer>();
         agent = GetComponent<NavMeshAgent>();
 
-        AI.Utils.SetColor(rend, Color.yellow);
+        Utils.SetColor(rend, Color.yellow);
 
         while (!isDetected)
             yield return StartCoroutine(AI.Movement.Wander(agent, wanderRadius, wanderTimer));
@@ -52,6 +52,6 @@ public class Perception : MonoBehaviour
     {
         target = _target;
         isDetected = true;
-        AI.Utils.SetColor(rend, Color.red);
+        Utils.SetColor(rend, Color.red);
     }
 }

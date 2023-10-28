@@ -5,6 +5,7 @@ using System;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using UnityEditor.TerrainTools;
 
 public class ThiefBehaviour : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class ThiefBehaviour : MonoBehaviour
     private float wanderRadius = 8.0f;
     [SerializeField]
     private float wanderTimer = 3.0f;
+    [SerializeField]
+    [Range(0f, 15f)]
+    private float copDetectionRadius = 6.0f;
 
     private GameObject thief;
     private GameObject cop;
@@ -22,8 +26,6 @@ public class ThiefBehaviour : MonoBehaviour
 
     private float coroutineTimer = 0.05f; // 20 times per second
 
-    private bool isStolen = false;
-    private bool copIsNear = false;
 
     private enum ThiefState
     {
@@ -44,6 +46,11 @@ public class ThiefBehaviour : MonoBehaviour
         thiefAgent = this.GetComponent<NavMeshAgent>();
 
         StartCoroutine(ThiefFSM());
+    }
+
+    private void Update()
+    {
+        //Utils.OnSceneGUI(cop.transform.position, copDetectionRange);
     }
 
     IEnumerator ThiefFSM()
@@ -81,6 +88,8 @@ public class ThiefBehaviour : MonoBehaviour
                 case ThiefState.Hide:
                     Debug.Log("Hiding");
 
+                    thiefAgent.speed = 5;
+                        
                     while (true)
                     {
                         AI.Movement.HideCloseToCop(thiefAgent, thief, cop, hidingSpots);
@@ -94,11 +103,11 @@ public class ThiefBehaviour : MonoBehaviour
 
     private bool isGuarded()
     {
-        return AI.Utils.inRange(cop, treasure, 7) ? true : false;
+        return Utils.inRange(cop, treasure, copDetectionRadius) ? true : false;
     }
 
     private bool canSteal()
     {
-        return AI.Utils.inRange(thief, treasure, 3) ? true : false;
+        return Utils.inRange(thief, treasure, 2) ? true : false;
     }
 }

@@ -11,10 +11,13 @@ public class Patrol : MonoBehaviour
     private GameObject ghost;
 
     [SerializeField]
+    [Range(0.1f, 10)]
+    public float detectionRange = 6.0f;
+
     private GameObject patroler;
+    private NavMeshAgent patrolAgent;
 
     private NavMeshAgent ghostAgent;
-    private NavMeshAgent patrolAgent;
 
     public Int32 initialDir;
     public Int32 wpIndex;
@@ -24,9 +27,9 @@ public class Patrol : MonoBehaviour
 
     void Start()
     {
-        ghost = this.gameObject;
-        ghostAgent = ghost.GetComponent<NavMeshAgent>();
+        patroler = this.gameObject;
         patrolAgent = patroler.GetComponent<NavMeshAgent>();
+        ghostAgent = ghost.GetComponent<NavMeshAgent>();
 
         initialDir = UnityEngine.Random.Range(0, 2);
         wpIndex = UnityEngine.Random.Range(0, waypoints.Length);

@@ -9,7 +9,7 @@ public class Wander : MonoBehaviour
     
     private NavMeshAgent agent;
 
-    private float timer;            
+    private float timer;
 
     IEnumerator Start()
     {
