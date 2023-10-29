@@ -10,10 +10,6 @@ public class Patrol : MonoBehaviour
     [SerializeField]
     private GameObject ghost;
 
-    [SerializeField]
-    [Range(0.1f, 10)]
-    public float detectionRange = 6.0f;
-
     private GameObject patroler;
     private NavMeshAgent patrolAgent;
 
@@ -35,6 +31,9 @@ public class Patrol : MonoBehaviour
         wpIndex = UnityEngine.Random.Range(0, waypoints.Length);
 
         ghost.transform.position = waypoints[wpIndex].transform.position;
+
+        patrolAgent.speed = 2.5f;
+        ghostAgent.speed = 2.5f;
     }
 
     // Update is called once per frame

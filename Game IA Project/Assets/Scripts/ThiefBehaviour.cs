@@ -12,13 +12,14 @@ public class ThiefBehaviour : MonoBehaviour
     [SerializeField]
     private float wanderRadius = 8.0f;
     [SerializeField]
-    private float wanderTimer = 3.0f;
+    private float wanderTimer = 3.5f;
     [SerializeField]
     [Range(0f, 15f)]
-    private float copDetectionRadius = 6.0f;
+    public float copDetectionRadius = 6.0f;
 
     private GameObject thief;
-    private GameObject cop;
+    [HideInInspector]
+    public GameObject cop;
     private GameObject treasure;
     private GameObject[] hidingSpots;
 
@@ -26,6 +27,7 @@ public class ThiefBehaviour : MonoBehaviour
 
     private float coroutineTimer = 0.05f; // 20 times per second
 
+    private Renderer rend;
 
     private enum ThiefState
     {
@@ -45,12 +47,9 @@ public class ThiefBehaviour : MonoBehaviour
 
         thiefAgent = this.GetComponent<NavMeshAgent>();
 
-        StartCoroutine(ThiefFSM());
-    }
+        rend = this.GetComponent<Renderer>();
 
-    private void Update()
-    {
-        //Utils.OnSceneGUI(cop.transform.position, copDetectionRange);
+        StartCoroutine(ThiefFSM());
     }
 
     IEnumerator ThiefFSM()
@@ -61,14 +60,18 @@ public class ThiefBehaviour : MonoBehaviour
             {
                 case ThiefState.Wander:
                     Debug.Log("Wandering");
+                    thiefAgent.speed = 1.5f;
+                    Utils.SetColor(rend, Color.green);
 
                     currentState = isGuarded() ? ThiefState.Wander : ThiefState.Approach;
 
-                    yield return AI.Movement.Wander(thiefAgent, wanderRadius, wanderTimer);
+                    yield return StartCoroutine(AI.Movement.Wander(thiefAgent, wanderRadius, wanderTimer));
                     break;
 
                 case ThiefState.Approach:
                     Debug.Log("Approaching");
+                    thiefAgent.speed = 3f;
+                    Utils.SetColor(rend, Color.yellow);
 
                     currentState = isGuarded() ? ThiefState.Wander : ThiefState.Approach;
 
@@ -87,8 +90,9 @@ public class ThiefBehaviour : MonoBehaviour
 
                 case ThiefState.Hide:
                     Debug.Log("Hiding");
+                    Utils.SetColor(rend, Color.red);
 
-                    thiefAgent.speed = 5;
+                    thiefAgent.speed = 4;
                         
                     while (true)
                     {
