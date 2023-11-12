@@ -9,8 +9,8 @@ public class IsCopNear : ConditionBase
 {
     public override bool Check()
     {
-        GameObject cop = GameObject.Find("Cop");
-        GameObject treasure = GameObject.Find("Treasure");
-        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 10f;
+        GameObject cop = GameObject.FindGameObjectWithTag("cop");
+        GameObject treasure = GameObject.FindGameObjectWithTag("treasure");
+        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 3f;
     }
 }
