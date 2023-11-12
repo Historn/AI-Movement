@@ -50,7 +50,7 @@ MonoBehaviour:
     <inputParams>\r\n        <inputValues>\r\n          <entry name=\"target\" type=\"UnityEngine.Vector3\"
     isBlackboard=\"True\" blackboard=\"selectedPosition\" />\r\n        </inputValues>\r\n     
     </inputParams>\r\n      <outputParams />\r\n      <localParams />\r\n    </ActionNode>\r\n 
-    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"QuickStartGuide/DoneAbortableClickAndGo\"
+    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"DoneAbortableClickAndGo\"
     _description=\"Moves the Game Object to the last position indicated by the left
     mouse click. A new click will overwrite the previous position.\" _removeIfClosed=\"False\">\r\n     
     <_rootList>\r\n        <elem>\r\n          <RepeatDecorator id=\"1\" />\r\n       

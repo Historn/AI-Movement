@@ -642,6 +642,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   wanderRadius: 8
   wanderTimer: 3
+  copDetectionRadius: 6
+  cop: {fileID: 0}
 --- !u!114 &227207036
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -655,7 +657,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxTasksPerTick: 500
-  behavior: {fileID: 11400000, guid: ae2fe7933b18c9043865c733014771cd, type: 2}
+  behavior: {fileID: 11400000, guid: 733d7d930e9481a428d1313309b470a5, type: 2}
   paused: 0
   restartWhenFinished: 0
   blackboard:
@@ -675,11 +677,11 @@ MonoBehaviour:
     colorParamsNames: []
     colorParamsLostDefaultValue: 
     objectParams:
-    - {fileID: 1718046889}
     - {fileID: 65473227}
+    - {fileID: 1718046889}
     objectParamsNames:
-    - area
-    - target
+    - Treasure
+    - Floor
     objectParamsLostDefaultValue: 
     layerMaskParams: []
     layerMaskParamsNames: []
@@ -689,8 +691,10 @@ MonoBehaviour:
     vector2Params: []
     vector2ParamsNames: []
     vector2ParamsLostDefaultValue: 
-    vector3Params: []
-    vector3ParamsNames: []
+    vector3Params:
+    - {x: 0, y: 0, z: 0}
+    vector3ParamsNames:
+    - hide
     vector3ParamsLostDefaultValue: 
     vector4Params: []
     vector4ParamsNames: []

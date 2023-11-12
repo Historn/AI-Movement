@@ -48,7 +48,7 @@ MonoBehaviour:
     </inputParams>\r\n      <outputParams />\r\n      <localParams />\r\n    </ActionNode>\r\n   
     <ConditionEvalNode id=\"10\" policy=\"ATOMIC_CHECK\" name=\"Basic/CheckMouseButton\">\r\n     
     <inputParams />\r\n      <outputParams />\r\n      <localParams />\r\n    </ConditionEvalNode>\r\n 
-    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"QuickStartGuide/DoneClickAndGo\"
+    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"DoneClickAndGo\"
     _description=\"Moves the Game Object to the last position indicated by the left
     mouse click.&#xA;Once a position has been selected, it cannot be changed until
     the Game Object has reached it.\" _removeIfClosed=\"False\">\r\n      <_rootList>\r\n       

@@ -39,7 +39,7 @@ MonoBehaviour:
     <inputParams>\r\n        <inputValues>\r\n          <entry name=\"target\" type=\"UnityEngine.Vector3\"
     isBlackboard=\"True\" blackboard=\"wanderTarget\" />\r\n        </inputValues>\r\n     
     </inputParams>\r\n      <outputParams />\r\n      <localParams />\r\n    </ActionNode>\r\n 
-    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"QuickStartGuide/DoneWander\"
+    </runtimeInfo>\r\n  <editorInfo>\r\n    <BehaviorTree id=\"0\" _name=\"DoneWander\"
     _description=\"Wanders to random positions around a NavMesh area.\" _removeIfClosed=\"False\">\r\n     
     <_rootList>\r\n        <elem>\r\n          <RepeatDecorator id=\"4\" />\r\n       
     </elem>\r\n      </_rootList>\r\n      <_nodes>\r\n        <nodes>\r\n         

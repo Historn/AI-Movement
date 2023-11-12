@@ -48,9 +48,9 @@ MonoBehaviour:
     type=\"UnityEngine.GameObject\" isBlackboard=\"True\" blackboard=\"wanderArea\"
     />\r\n        </inputValues>\r\n      </inputParams>\r\n      <outputParams />\r\n     
     <localParams />\r\n    </SubbehaviorNode>\r\n  </runtimeInfo>\r\n  <editorInfo>\r\n   
-    <BehaviorTree id=\"0\" _name=\"QuickStartGuide/DoneEnemyBehavior\" _description=\"Moves
-    towards a particular Game Object if it's close to it, otherwise wanders around
-    an area.\" _removeIfClosed=\"False\">\r\n      <_rootList>\r\n        <elem>\r\n         
+    <BehaviorTree id=\"0\" _name=\"DoneEnemyBehavior\" _description=\"Moves towards
+    a particular Game Object if it's close to it, otherwise wanders around an area.\"
+    _removeIfClosed=\"False\">\r\n      <_rootList>\r\n        <elem>\r\n         
     <RepeatDecorator id=\"6\" />\r\n        </elem>\r\n        <elem>\r\n         
     <ConditionEvalNode id=\"19\" />\r\n        </elem>\r\n        <elem>\r\n         
     <ConditionEvalNode id=\"20\" />\r\n        </elem>\r\n      </_rootList>\r\n     
