@@ -43,3 +43,10 @@ TextureImporter:
     sprites: []
   spritePackingTag: 
   userData: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 74816
+  packageName: Behavior Bricks
+  packageVersion: 1.0.2
+  assetPath: Assets/Imported Assets/BehaviorBricks/Editor/Resources/Images/FreeTreeView/connector_male_connected_hover.png
+  uploadId: 303631

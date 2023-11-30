@@ -10,3 +10,10 @@ MonoImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 74816
+  packageName: Behavior Bricks
+  packageVersion: 1.0.2
+  assetPath: Assets/Imported Assets/BehaviorBricks/Actions/System/Basic/toggleBool.cs
+  uploadId: 303631
