@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 3988447412970615234}
   - component: {fileID: 3988447412970615236}
   m_Layer: 0
-  m_Name: Patroler
+  m_Name: PatrolerRear
   m_TagString: cop
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -63,7 +63,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 95a8b2f87a55fe7489a4b63d4fa66e5f, type: 2}
+  - {fileID: 2100000, guid: fac0910bcbf64464bab4285052a5b0b2, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
