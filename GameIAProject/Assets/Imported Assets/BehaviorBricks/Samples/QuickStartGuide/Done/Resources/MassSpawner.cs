@@ -22,7 +22,7 @@ public class MassSpawner : MonoBehaviour
     /// </summary>
     void Start()
     {
-        entities = new List<GameObject>(FindObjectsByType(typeof(GameObject),0) as GameObject[]);
+        entities = new List<GameObject>(FindObjectsOfType(typeof(GameObject)) as GameObject[]);
         entities.RemoveAll(e => e.GetComponent<BehaviorExecutor>() == null);
         InvokeRepeating("Spawn", 0f, 1.0f / 1000.0f);
     }
