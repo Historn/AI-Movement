@@ -39,6 +39,12 @@ public class Flock : MonoBehaviour
 
         moveDirection = Vector3.SmoothDamp(myTransform.forward, moveDirection, ref currentVelocity, 3.5f);
 
+        // 2D/3D
+        if (!flockManager.is3D)
+        {
+            moveDirection.y = 0f;
+        }
+
         //speed = Mathf.Clamp(moveDirection.magnitude, flockManager.minSpeed, flockManager.maxSpeed);
         moveDirection = moveDirection.normalized * speed;
 

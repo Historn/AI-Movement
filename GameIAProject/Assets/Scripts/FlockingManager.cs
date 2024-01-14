@@ -6,10 +6,12 @@ public class FlockingManager : MonoBehaviour
 {
     [Header("Spawn")]
     public Flock fishPrefab;
-    public int numFish = 20;
+    public int numEntities = 20;
     [Range(1, 10)]
     public float bounds = 5f;
 
+    [Header("Type")]
+    public bool is3D = true;
 
     [Header("Speed")]
     [Range(0, 10)]
@@ -52,13 +54,16 @@ public class FlockingManager : MonoBehaviour
 
     void Start()
     {
-        allFish = new Flock[numFish];
+        allFish = new Flock[numEntities];
+        float posY = this.transform.position.y;
 
-        for (int i = 0; i < numFish; i++)
+        for (int i = 0; i < numEntities; i++)
         {
-            Vector3 spawnPos = this.transform.position + new Vector3(Random.Range(1, 5),
-                                                                Random.Range(1, 5),
-                                                                Random.Range(1, 5));
+            Vector3 spawnPos = this.transform.position +
+                new Vector3(
+                    Random.Range(1, 5),
+                    is3D ? Random.Range(1, 5) : posY,
+                    Random.Range(1, 5));
 
 
             Quaternion spawnRot = Quaternion.Euler(0, UnityEngine.Random.Range(0, 360), 0);
