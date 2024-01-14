@@ -122,7 +122,7 @@ MonoBehaviour:
     607.9288\" name=\"RobberBehavior\" description=\"\" cardinality=\"-1\" hasParent=\"True\">\r\n         
     <BehaviorTree id=\"0\" />\r\n          <SubbehaviorNode id=\"23\" />\r\n         
     <SequenceNode id=\"26\" />\r\n        </data>\r\n      </_data>\r\n    </SubbehaviorNode>\r\n   
-    <ConditionNode id=\"9\">\r\n      <_data>\r\n        <data breakpoint=\"0\" selected=\"True\"
+    <ConditionNode id=\"9\">\r\n      <_data>\r\n        <data breakpoint=\"0\" selected=\"False\"
     position=\"258.3396 601.7896\" name=\"Perception/IsTargetClose\" description=\"Checks
     whether a target is close depending on a given distance\" cardinality=\"0\" hasParent=\"True\">\r\n         
     <BehaviorTree id=\"0\" />\r\n          <ConditionNode id=\"9\" />\r\n         
