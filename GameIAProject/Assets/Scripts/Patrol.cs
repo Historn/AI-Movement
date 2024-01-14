@@ -43,7 +43,5 @@ public class Patrol : MonoBehaviour
         {
             wpIndex = AI.Movement.FollowPatrolPath(initialDir, wpIndex, waypoints, ghostAgent);
         }
-
-        //AI.Movement.Seek(patrolAgent, ghost.transform);
     }
 }

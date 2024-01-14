@@ -38,7 +38,7 @@ public class Moves : MonoBehaviour
     public void Wander()
     {
         float radius = 5;
-        float distance = 7;
+        float distance = 20;
 
         Vector3 target = Vector3.zero;
 

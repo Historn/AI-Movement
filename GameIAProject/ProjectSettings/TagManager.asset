@@ -6,6 +6,10 @@ TagManager:
   tags:
   - gaviota
   - Character
+  - treasure
+  - cop
+  - hide
+  - Thief
   layers:
   - Default
   - TransparentFX
@@ -13,7 +17,7 @@ TagManager:
   - Character
   - Water
   - UI
-  - 
+  - Thief
   - 
   - 
   - 
