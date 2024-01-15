@@ -6,6 +6,7 @@ using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
 using UnityEditor.TerrainTools;
+using System.Collections.Generic;
 
 public class ThiefBehaviour : MonoBehaviour
 {
@@ -28,6 +29,7 @@ public class ThiefBehaviour : MonoBehaviour
     private float coroutineTimer = 0.05f; // 20 times per second
 
     private Renderer rend;
+    private int hideIndex;
 
     private enum ThiefState
     {
@@ -93,10 +95,19 @@ public class ThiefBehaviour : MonoBehaviour
                     Utils.SetColor(rend, Color.red);
 
                     thiefAgent.speed = 4;
-                        
+                    hideIndex = UnityEngine.Random.Range(0, hidingSpots.Length);
+
+
                     while (true)
                     {
-                        AI.Movement.HideCloseToCop(thiefAgent, thief, cop, hidingSpots);
+                        // Hide if cops nearby, otherwise change spot
+                        if (!AreCopsInRadius(thief.transform.position, 5) && isHiding())
+                        {
+                            hideIndex = UnityEngine.Random.Range(0, hidingSpots.Length);
+                            thiefAgent.destination = hidingSpots[hideIndex].transform.position;
+                        }
+
+                        //AI.Movement.HideCloseToCop(thiefAgent, thief, cop, hidingSpots);
                         yield return coroutineTimer;
                     }
             }
@@ -114,4 +125,27 @@ public class ThiefBehaviour : MonoBehaviour
     {
         return Utils.inRange(thief, treasure, 2) ? true : false;
     }
+
+    public bool AreCopsInRadius(Vector3 position, float radius)
+    {
+        GameObject[] cops = GameObject.FindGameObjectsWithTag("cop");
+
+        foreach (GameObject cop in cops)
+        {
+            float distance = Vector3.Distance(position, cop.transform.position);
+
+            if (distance <= radius)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool isHiding()
+    {
+        return Utils.inRange(thief, hidingSpots[hideIndex], 0.3f) ? true : false;
+    }
 }
+

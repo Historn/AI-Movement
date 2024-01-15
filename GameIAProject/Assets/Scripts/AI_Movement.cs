@@ -63,7 +63,7 @@ public static class AI
 
             Debug.DrawLine(hidingSpot.transform.position, thief.transform.position);
         }
-        
+
         public static Vector3 HideValue(GameObject cop, GameObject[] hidingSpots)
         {
             Func<GameObject, float> distance = (hs) => Vector3.Distance(cop.transform.position, hs.transform.position);
