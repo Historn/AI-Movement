@@ -23,38 +23,81 @@ public class PatrolPerception : MonoBehaviour
     public Int32 initialDir;
     public Int32 wpIndex;
 
-    public GameObject[] waypoints;
+    public GameObject parentWaypoint;
+    public List<GameObject> waypoints = new List<GameObject>();
+
+    private bool isPaused = false;
 
     void Start()
     {
-
         patroler = this.gameObject;
 
         patrolAgent = patroler.GetComponent<NavMeshAgent>();
         target = GameObject.FindGameObjectWithTag("Thief").transform;
         frustum = patroler.GetComponentInChildren<Camera>();
 
-        patroler.transform.position = waypoints[wpIndex].transform.position;
-
-        initialDir = UnityEngine.Random.Range(0, 2);
-        wpIndex = UnityEngine.Random.Range(0, waypoints.Length);
-    }
-
-    private void Update()
-    {
-        if (!isDetected)
+        // Check if a parent object is assigned
+        if (parentWaypoint != null)
         {
-            if (AI.Detection.Search("Thief", this.gameObject, frustum, mask, out hit))
-                this.transform.parent.BroadcastMessage("Detected", hit.collider.gameObject.transform);
-
-            if (!patrolAgent.pathPending && patrolAgent.remainingDistance < 0.5f)
+            // Iterate through the children and add them to the list
+            foreach (Transform child in parentWaypoint.transform)
             {
-                wpIndex = AI.Movement.FollowPatrolPath(initialDir, wpIndex, waypoints, patrolAgent);
+                waypoints.Add(child.gameObject);
             }
         }
         else
         {
-            AI.Movement.Seek(patrolAgent, target);
+            Debug.LogError("Parent object not assigned!");
+        }
+
+        patroler.transform.position = waypoints[wpIndex].transform.position;
+
+        initialDir = 0;
+        wpIndex = 0;
+
+        StartCoroutine(Patrol());
+    }
+
+    IEnumerator Patrol()
+    {
+        while (true)
+        {
+            if (!isDetected)
+            {
+                if (AI.Detection.Search("Thief", this.gameObject, frustum, mask, out hit))
+                    this.transform.parent.BroadcastMessage("Detected", hit.collider.gameObject.transform);
+
+                if (!isPaused)
+                {
+                    if (waypoints[wpIndex].tag.Equals("stop") && !patrolAgent.pathPending && patrolAgent.remainingDistance < 0.5f)
+                    {
+                        isPaused = true;
+                    }
+                    else if (!patrolAgent.pathPending && patrolAgent.remainingDistance < 0.4f)
+                    {
+                        wpIndex = AI.Movement.FollowPatrolPath(initialDir, wpIndex, waypoints.ToArray(), patrolAgent);
+                    }
+                }
+            }
+            else
+            {
+                // Handle detection or seek logic when the patroller is detected
+                AI.Movement.Seek(patrolAgent, target);
+            }
+
+            if (isPaused)
+            {
+                patrolAgent.isStopped = true;
+            }
+
+            yield return new WaitForSeconds(isPaused ? 3 : 0);
+
+            if (isPaused)
+            {
+                isPaused = false;
+                patrolAgent.isStopped = false;
+                wpIndex = AI.Movement.FollowPatrolPath(initialDir, wpIndex, waypoints.ToArray(), patrolAgent);
+            }          
         }
     }
 

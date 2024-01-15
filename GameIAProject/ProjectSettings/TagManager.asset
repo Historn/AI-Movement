@@ -10,6 +10,7 @@ TagManager:
   - cop
   - hide
   - Thief
+  - stop
   layers:
   - Default
   - TransparentFX
