@@ -11,6 +11,6 @@ public class IsCopNear : ConditionBase
     {
         GameObject cop = GameObject.FindGameObjectWithTag("cop");
         GameObject treasure = GameObject.FindGameObjectWithTag("treasure");
-        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 20f;
+        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 17f;
     }
 }
