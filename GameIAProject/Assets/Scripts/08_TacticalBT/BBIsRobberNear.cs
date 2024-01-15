@@ -11,6 +11,6 @@ public class IsRobberNear : ConditionBase
     {
         GameObject cop = GameObject.Find("Thief");
         GameObject treasure = GameObject.Find("Treasure");
-        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 10f;
+        return Vector3.Distance(cop.transform.position, treasure.transform.position) < 7f;
     }
 }

@@ -52,7 +52,7 @@ public static class AI
 
             // Check if the hiding spot is on the NavMesh.
             NavMeshHit hit;
-            if (NavMesh.SamplePosition(hidingPos, out hit, 1.0f, NavMesh.AllAreas))
+            if (NavMesh.SamplePosition(hidingPos, out hit, .20f, NavMesh.AllAreas))
             {
                 thiefAgent.SetDestination(hit.position);
             }
